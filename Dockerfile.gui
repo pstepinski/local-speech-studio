@@ -10,10 +10,15 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 COPY --from=uv /uv /uvx /bin/
 WORKDIR /srv
 COPY docker/gui/pyproject.toml ./pyproject.toml
-RUN uv sync --no-dev --no-install-project
+RUN uv sync --no-dev --no-install-project \
+    && uv cache clean
 
 COPY gui_app ./gui_app
 COPY app/static ./app/static
+
+LABEL org.opencontainers.image.source="https://github.com/pstepinski/local-speech-studio" \
+      org.opencontainers.image.documentation="https://github.com/pstepinski/local-speech-studio#readme" \
+      org.opencontainers.image.licenses="MIT"
 
 EXPOSE 8080
 CMD ["uvicorn", "gui_app.main:app", "--host", "0.0.0.0", "--port", "8080"]

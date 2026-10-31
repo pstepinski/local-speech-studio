@@ -153,12 +153,17 @@ Projekt zawiera trzy niezależne obrazy: `gui`, `tts` oraz `stt`. Do kontenerów
 GPU wymagane są sterownik NVIDIA i NVIDIA Container Toolkit. Pełny zestaw
 uruchamia jedno polecenie:
 
+- [`pstepinski/local-speech-studio-gui`](https://hub.docker.com/r/pstepinski/local-speech-studio-gui),
+- [`pstepinski/local-speech-studio-tts`](https://hub.docker.com/r/pstepinski/local-speech-studio-tts),
+- [`pstepinski/local-speech-studio-stt`](https://hub.docker.com/r/pstepinski/local-speech-studio-stt).
+
 ```bash
 docker compose up
 ```
 
-Pierwsze uruchomienie automatycznie buduje obrazy, a następnie pobiera z
-Hugging Face wymagane modele:
+Docker Compose korzysta z opublikowanych obrazów z Docker Hub. Można je też
+zbudować lokalnie poleceniem `docker compose build`. Przy pierwszym uruchomieniu
+kontenerów usługi pobierają z Hugging Face wymagane modele:
 
 - Chatterbox Multilingual dla usługi TTS,
 - Whisper Large V3 Turbo dla usługi STT.

@@ -16,9 +16,14 @@ RUN apt-get update \
 COPY --from=uv /uv /uvx /bin/
 WORKDIR /srv
 COPY docker/tts/pyproject.toml ./pyproject.toml
-RUN uv sync --no-dev --no-install-project
+RUN uv sync --no-dev --no-install-project \
+    && uv cache clean
 
 COPY app ./app
+
+LABEL org.opencontainers.image.source="https://github.com/pstepinski/local-speech-studio" \
+      org.opencontainers.image.documentation="https://github.com/pstepinski/local-speech-studio#readme" \
+      org.opencontainers.image.licenses="MIT"
 
 EXPOSE 8000
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

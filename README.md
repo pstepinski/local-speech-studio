@@ -162,12 +162,17 @@ The project contains three independent images: `gui`, `tts`, and `stt`. The
 GPU containers require the NVIDIA driver and NVIDIA Container Toolkit. Start
 the complete stack with:
 
+- [`pstepinski/local-speech-studio-gui`](https://hub.docker.com/r/pstepinski/local-speech-studio-gui),
+- [`pstepinski/local-speech-studio-tts`](https://hub.docker.com/r/pstepinski/local-speech-studio-tts),
+- [`pstepinski/local-speech-studio-stt`](https://hub.docker.com/r/pstepinski/local-speech-studio-stt).
+
 ```bash
 docker compose up
 ```
 
-On the first run, Docker automatically builds the images and then downloads
-the required models from Hugging Face:
+Docker Compose uses the published images from Docker Hub. You can build them
+locally instead with `docker compose build`. On the first container startup,
+the services download the required models from Hugging Face:
 
 - Chatterbox Multilingual for the TTS service,
 - Whisper Large V3 Turbo for the STT service.
