@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "chatterbox-rest"
+version = "0.1.0"
+description = "Local multilingual text-to-speech REST API powered by Chatterbox"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "accelerate>=1.10,<2",
+    "chatterbox-tts>=0.1.7,<0.2",
+    "fastapi>=0.115,<1",
+    "python-multipart>=0.0.20,<1",
+    "python-dotenv>=1.0,<2",
+    "setuptools>=75,<81",
+    "torch==2.12.0",
+    "torchaudio==2.11.0",
+    "uvicorn[standard]>=0.34,<1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "httpx>=0.28,<1",
+    "pytest>=8.3,<9",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["app", "stt_app", "gui_app"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+# Chatterbox 0.1.7 pins torch 2.6/cu124, which has no sm_120 kernels for
+# GeForce RTX 50-series GPUs. PyTorch 2.12 defaults to CUDA 13 on PyPI and
+# supports Blackwell. TorchAudio ended parallel releases at 2.11 and declares
+# compatibility with PyTorch 2.11 and all future PyTorch releases.
+[tool.uv]
+override-dependencies = [
+    "torch==2.12.0",
+    "torchaudio==2.11.0",
+]
+

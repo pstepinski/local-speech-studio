@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Lokalne studio mowy: Chatterbox TTS i Whisper STT"
+    />
+    <title>Lokalne studio mowy</title>
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="/static/i18n.js" defer></script>
+    <script src="/static/app.js" defer></script>
+    <script src="/static/continuous.js" defer></script>
+  </head>
+  <body>
+    <main class="shell">
+      <div class="language-switch" aria-label="Język interfejsu">
+        <button type="button" data-language="pl" aria-pressed="true">PL</button>
+        <button type="button" data-language="en" aria-pressed="false">EN</button>
+      </div>
+      <header class="hero">
+        <div class="mark" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div>
+          <p class="eyebrow">Chatterbox + Whisper Large V3 Turbo</p>
+          <h1>Tekst i głos.<br />W obie strony.</h1>
+          <p class="intro">
+            Lokalna synteza i transkrypcja. Twoje dane nie opuszczają komputera.
+          </p>
+        </div>
+      </header>
+
+      <nav class="tabs" role="tablist" aria-label="Wybierz narzędzie">
+        <button
+          class="tab active"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="tts-panel"
+          id="tts-tab"
+          data-panel="tts-panel"
+        >
+          Tekst → mowa
+        </button>
+        <button
+          class="tab"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="stt-panel"
+          id="stt-tab"
+          data-panel="stt-panel"
+        >
+          Mowa → tekst
+        </button>
+        <button
+          class="tab"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="continuous-panel"
+          id="continuous-tab"
+          data-panel="continuous-panel"
+        >
+          Nasłuch ciągły
+        </button>
+      </nav>
+
+      <section
+        class="studio tab-panel"
+        id="tts-panel"
+        role="tabpanel"
+        aria-labelledby="tts-tab"
+      >
+        <div class="studio-header">
+          <div>
+            <p class="section-number">01 / STUDIO</p>
+            <h2 id="studio-heading">Nowe nagranie</h2>
+          </div>
+          <span class="status" id="service-status">
+            <span class="status-dot"></span>
+            <span>Sprawdzanie modelu…</span>
+          </span>
+        </div>
+
+        <form id="speech-form">
+          <label for="text">Tekst lektora</label>
+          <div class="textarea-wrap">
+            <textarea
+              id="text"
+              name="text"
+              maxlength="5000"
+              required
+              autofocus
+              placeholder="Wpisz tekst, który chcesz usłyszeć…"
+            >Cześć! To jest mój lokalny lektor Chatterbox.</textarea>
+            <span id="counter" aria-live="polite">49 / 5000</span>
+          </div>
+
+          <div class="controls">
+            <div class="field">
+              <label for="language">Język</label>
+              <select id="language" name="language">
+                <option value="pl" selected>Polski</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+            <button type="submit" id="generate">
+              <span class="button-label">Generuj nagranie</span>
+              <span class="button-icon" aria-hidden="true">→</span>
+            </button>
+          </div>
+        </form>
+
+        <div class="message" id="message" role="status" aria-live="polite"></div>
+
+        <section class="result" id="result" hidden aria-labelledby="result-heading">
+          <div>
+            <p class="section-number">02 / GOTOWE</p>
+            <h2 id="result-heading">Twoje nagranie</h2>
+          </div>
+          <audio id="audio" controls></audio>
+          <div class="playback-speed">
+            <label for="playback-rate">Prędkość odtwarzania</label>
+            <select id="playback-rate" aria-label="Prędkość odtwarzania">
+              <option value="0.5">0,5×</option>
+              <option value="0.75">0,75×</option>
+              <option value="1" selected>1×</option>
+              <option value="1.25">1,25×</option>
+              <option value="1.5">1,5×</option>
+              <option value="1.75">1,75×</option>
+              <option value="2">2×</option>
+            </select>
+          </div>
+          <a id="download" class="download" download="speech.wav">
+            Pobierz WAV <span aria-hidden="true">↓</span>
+          </a>
+        </section>
+      </section>
+
+      <section
+        class="studio tab-panel"
+        id="stt-panel"
+        role="tabpanel"
+        aria-labelledby="stt-tab"
+        hidden
+      >
+        <div class="studio-header">
+          <div>
+            <p class="section-number">01 / TRANSKRYPCJA</p>
+            <h2>Zamień nagranie w tekst</h2>
+          </div>
+          <span class="status" id="stt-service-status">
+            <span class="status-dot"></span>
+            <span>Sprawdzanie Whisper…</span>
+          </span>
+        </div>
+
+        <form id="transcription-form">
+          <div class="stt-source-grid">
+            <label class="upload-card" for="audio-file">
+              <span class="source-icon" aria-hidden="true">↑</span>
+              <strong>Wybierz plik audio</strong>
+              <span>WAV, MP3, M4A, OGG lub WebM</span>
+              <input id="audio-file" name="file" type="file" accept="audio/*" />
+            </label>
+
+            <div class="record-card">
+              <span class="source-icon" aria-hidden="true">●</span>
+              <strong>Nagraj z mikrofonu</strong>
+              <span id="recording-time">Gotowy do nagrywania</span>
+              <button id="record-button" class="secondary-button" type="button">
+                <span class="record-label">Rozpocznij nagrywanie</span>
+                <span aria-hidden="true">●</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="selected-audio" id="selected-audio" hidden>
+            <div>
+              <span class="section-number">WYBRANE AUDIO</span>
+              <strong id="selected-audio-name"></strong>
+            </div>
+            <audio id="recording-preview" controls></audio>
+          </div>
+
+          <div class="controls">
+            <div class="field">
+              <label for="transcription-language">Język nagrania</label>
+              <select id="transcription-language" name="language">
+                <option value="auto" selected>Wykryj automatycznie</option>
+                <option value="pl">Polski</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+            <button type="submit" id="transcribe" disabled>
+              <span class="button-label">Transkrybuj nagranie</span>
+              <span class="button-icon" aria-hidden="true">→</span>
+            </button>
+          </div>
+        </form>
+
+        <div class="message" id="transcription-message" role="status" aria-live="polite"></div>
+
+        <section class="transcription-result" id="transcription-result" hidden>
+          <div class="result-title">
+            <div>
+              <p class="section-number">02 / TRANSKRYPCJA</p>
+              <h2>Rozpoznany tekst</h2>
+            </div>
+            <button id="copy-transcription" class="copy-button" type="button">
+              Kopiuj tekst
+            </button>
+          </div>
+          <textarea id="transcription-text" readonly aria-label="Rozpoznany tekst"></textarea>
+        </section>
+      </section>
+
+      <section
+        class="studio tab-panel"
+        id="continuous-panel"
+        role="tabpanel"
+        aria-labelledby="continuous-tab"
+        hidden
+      >
+        <div class="studio-header">
+          <div>
+            <p class="section-number">01 / ASYSTENT GŁOSOWY</p>
+            <h2>Nasłuchuj frazy aktywującej</h2>
+          </div>
+          <span class="status" id="continuous-service-status">
+            <span class="status-dot"></span>
+            <span>Nasłuch wyłączony</span>
+          </span>
+        </div>
+
+        <div class="wake-layout">
+          <div class="wake-orb" id="wake-orb" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="wake-copy">
+            <p class="section-number">FRAZA AKTYWUJĄCA</p>
+            <q id="wake-phrase">OK Studio!</q>
+            <p>
+              Po rozpoznaniu frazy nagrywanie potrwa do wyraźnej przerwy w mowie.
+              Gotowa wypowiedź zostanie przepisana przez lokalny model Whisper.
+            </p>
+            <div class="audio-meter" aria-label="Poziom mikrofonu">
+              <span id="audio-level"></span>
+            </div>
+            <button type="button" id="continuous-toggle">
+              <span class="button-label">Włącz ciągły nasłuch</span>
+              <span class="button-icon" aria-hidden="true">●</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="message" id="continuous-message" role="status" aria-live="polite">
+          Mikrofon jest wyłączony.
+        </div>
+
+        <section class="transcription-result" id="continuous-result" hidden>
+          <div class="result-title">
+            <div>
+              <p class="section-number">02 / OSTATNIA WYPOWIEDŹ</p>
+              <h2>Rozpoznany tekst</h2>
+            </div>
+            <button id="copy-continuous" class="copy-button" type="button">
+              Kopiuj tekst
+            </button>
+          </div>
+          <textarea id="continuous-text" readonly aria-label="Tekst ostatniej wypowiedzi"></textarea>
+        </section>
+      </section>
+
+      <footer>
+        <span>LOCAL SPEECH STUDIO</span>
+        <span><a id="tts-docs-link">TTS API ↗</a> · <a id="stt-docs-link">STT API ↗</a></span>
+      </footer>
+    </main>
+  </body>
+</html>

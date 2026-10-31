@@ -1,0 +1,53 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Testy i narzędzia
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Konfiguracja lokalna i sekrety
+.env
+.env.*
+!.env.example
+
+# Pliki uruchomieniowe i logi
+.run/
+*.log
+*.pid
+
+# Audio generowane lokalnie i próbki głosu
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.m4a
+
+# Lokalne cache i wagi modeli (w Dockerze są przechowywane w volume)
+.cache/
+models/
+model-cache/
+huggingface/
+hub/
+*.safetensors
+*.ckpt
+*.pth
+*.pt
+*.onnx
+*.bin
+
+# Edytory i system operacyjny
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+

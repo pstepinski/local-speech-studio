@@ -1,0 +1,21 @@
+[project]
+name = "chatterbox-tts-runtime"
+version = "0.1.0"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "chatterbox-tts==0.1.7",
+    "fastapi==0.161.1",
+    "python-dotenv==1.2.4",
+    "setuptools>=75,<81",
+    "torch==2.12.0",
+    "torchaudio==2.11.0",
+    "uvicorn[standard]==0.54.0",
+]
+
+[tool.uv]
+package = false
+override-dependencies = [
+    "torch==2.12.0",
+    "torchaudio==2.11.0",
+]
+
