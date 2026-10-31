@@ -7,6 +7,10 @@ by Whisper Large V3 Turbo.
 Source code, issue tracker, and complete documentation:
 [github.com/pstepinski/local-speech-studio](https://github.com/pstepinski/local-speech-studio)
 
+## Interface preview
+
+[![Local Speech Studio GUI](https://raw.githubusercontent.com/pstepinski/local-speech-studio/main/docs/gui-en.png)](https://github.com/pstepinski/local-speech-studio)
+
 ## Images
 
 | Image | Purpose | Container port |
